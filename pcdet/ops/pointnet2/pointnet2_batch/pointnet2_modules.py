@@ -114,8 +114,17 @@ class PointnetSAModuleMSG(_PointnetSAModuleBase):
 class PointnetSAModuleMSG_SSD(_PointnetSAModuleBase):
     """Pointnet set abstraction layer with multiscale grouping"""
 
-    def __init__(self, *, npoint: int, radii: List[float], nsamples: List[int], mlps: List[List[int]], bn: bool = True,
-                 use_xyz: bool = True, pool_method='max_pool', out_channle=-1, fps_type='D-FPS', fps_range=-1,
+    def __init__(self, *,
+                 npoint: int,
+                 radii: List[float],
+                 nsamples: List[int],
+                 mlps: List[List[int]],
+                 bn: bool = True,
+                 use_xyz: bool = True,
+                 pool_method='max_pool',
+                 out_channle=-1,
+                 fps_type='D-FPS',
+                 fps_range=-1,
                  dilated_group=False):
         """
         :param npoint: int
