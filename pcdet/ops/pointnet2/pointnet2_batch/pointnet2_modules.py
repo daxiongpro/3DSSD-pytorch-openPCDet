@@ -18,7 +18,8 @@ class _PointnetSAModuleBase(nn.Module):
         self.mlps = None
         self.pool_method = 'max_pool'
 
-    def forward(self, xyz: torch.Tensor, features: torch.Tensor = None, new_xyz=None, flag_SSD=False) -> (torch.Tensor, torch.Tensor):
+    def forward(self, xyz: torch.Tensor, features: torch.Tensor = None, new_xyz=None, flag_SSD=False) -> (
+            torch.Tensor, torch.Tensor):
         """
         :param xyz: (B, N, 3) tensor of the xyz coordinates of the features
         :param features: (B, N, C) tensor of the descriptors of the the features
@@ -110,7 +111,6 @@ class PointnetSAModuleMSG(_PointnetSAModuleBase):
         self.pool_method = pool_method
 
 
-
 class PointnetSAModuleMSG_SSD(_PointnetSAModuleBase):
     """Pointnet set abstraction layer with multiscale grouping"""
 
@@ -170,7 +170,8 @@ class PointnetSAModuleMSG_SSD(_PointnetSAModuleBase):
             ])
             self.out_aggregation = nn.Sequential(*shared_mlps)
 
-    def forward(self, xyz: torch.Tensor, features: torch.Tensor = None, new_xyz=None, ctr_xyz=None) -> (torch.Tensor, torch.Tensor):
+    def forward(self, xyz: torch.Tensor, features: torch.Tensor = None, new_xyz=None, ctr_xyz=None) -> (
+            torch.Tensor, torch.Tensor):
         """
         :param xyz: (B, N, 3) tensor of the xyz coordinates of the features
         :param features: (B, C, N) tensor of the descriptors of the the features
@@ -207,7 +208,7 @@ class PointnetSAModuleMSG_SSD(_PointnetSAModuleBase):
                     features_for_fps_distance = SSD.calc_square_dist(features_SSD, features_SSD)
                     features_for_fps_distance = features_for_fps_distance.contiguous()
                     fps_idx = pointnet2_3DSSD.furthest_point_sample_with_dist(features_for_fps_distance, npoint)
-                elif fps_type == 'FS':
+                elif fps_type == 'FS':  # 融合采样
                     # features_SSD = xyz_tmp
                     features_SSD = torch.cat([xyz_tmp, feature_tmp], dim=-1)
                     features_for_fps_distance = SSD.calc_square_dist(features_SSD, features_SSD)
@@ -269,7 +270,6 @@ class Vote_layer(nn.Module):
         self.min_offset = torch.tensor(max_translate_range).float().view(1, 1, 3)
 
     def forward(self, xyz, features):
-
         new_features = self.mlp_modules(features)
         ctr_offsets = self.ctr_reg(new_features)
 
