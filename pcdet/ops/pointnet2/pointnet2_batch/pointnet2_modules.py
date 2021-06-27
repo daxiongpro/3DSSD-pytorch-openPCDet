@@ -47,6 +47,8 @@ class _PointnetSAModuleBase(nn.Module):
             ).transpose(1, 2).contiguous() if self.npoint is not None else None
 
         for i in range(len(self.groupers)):
+            # 以new_xyz为中心，r为半径，nsample为半径r的范围内点的个数的max。提取特征
+            # torch.Size([2, 19, 4096, 16]) (B, 3+C, npoint, nsample) 输入的features: (B, C, N)
             new_features = self.groupers[i](xyz, new_xyz, features)  # (B, C, npoint, nsample)
 
             new_features = self.mlps[i](new_features)  # (B, mlp[-1], npoint, nsample)
@@ -127,13 +129,13 @@ class PointnetSAModuleMSG_SSD(_PointnetSAModuleBase):
                  fps_range=-1,
                  dilated_group=False):
         """
-        :param npoint: int
-        :param radii: list of float, list of radii to group with
-        :param nsamples: list of int, number of samples in each ball query
-        :param mlps: list of list of int, spec of the pointnet before the global pooling for each scale
-        :param bn: whether to use batchnorm
-        :param use_xyz:
-        :param pool_method: max_pool / avg_pool
+        :param npoint: int，采样点个数
+        :param radii: list of float, list of radii to group with，多尺度的多个半径大小
+        :param nsamples: list of int, number of samples in each ball query，每个球里面采样点的个数
+        :param mlps: list of list of int, spec of the pointnet before the global pooling for each scale，每个球的pointnet的mlp参数列表
+        :param bn: whether to use batchnorm，是否用bn
+        :param use_xyz: 提取特征时，是否用xyz？
+        :param pool_method: max_pool / avg_pool，每个球的pointnet池化方法
         """
         super().__init__()
         self.fps_types = fps_type
