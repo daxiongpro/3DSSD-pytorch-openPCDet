@@ -187,6 +187,7 @@ class PointnetSAModuleMSG_SSD(_PointnetSAModuleBase):
         :param xyz: (B, N, 3) tensor of the xyz coordinates of the features
         :param features: (B, C, N) tensor of the descriptors of the the features
         :param new_xyz:
+        :param ctr_xyz: 中心点坐标
         :return:
             new_xyz: (B, npoint, 3) tensor of the new features' xyz
             new_features: (B, npoint, \sum_k(mlps[k][-1])) tensor of the new_features descriptors
